@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  
+    xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:aop="http://www.springframework.org/schema/aop"   
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+     xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd  
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop  
+    http://www.springframework.org/schema/aop/spring-aop.xsd 
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx.xsd">  
+    
+<!-- 配置数据库连接池 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/shopsys"/> 				<!-- 注意库名-->
+    <property name="user" value="root"/>
+    <property name="password" value="123456"/>
+    </bean>
+<!--配置hibernate的相关属性 -->     
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    
+<!-- 注入连接池 -->
+    <property name="dataSource" ref="dataSource"/>
+<!-- 配置hibernate的相关属性  -->
+      <property name="hibernateProperties">
+      <props>
+      <!--使用方言 -->
+      <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+      <!-- 注意 这里的update -->
+      <!-- update ：去数据库查是否存在  存在：更新    不存在：新建     create：无论有没有这些表  删除之前已经存在的的表  然后新建 -->
+      <prop key="hibernate.hbm2ddl.auto">update</prop>
+<!--显示sql语句-->
+	  <prop key="hibernate.show_sql">true</prop>
+<!--格式化sql语句-->
+	  <prop key="format_sql">true</prop>	
+      </props>
+      </property>
+<!-- 加载hibernate中的映射文件   value里边写两个映射数据库的文件全类名 -->
+
+    <property name="mappingResources">
+    <list>
+      <value>com/shopsystem/domain/Product.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/User.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/MorePic.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/DinDan.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/DDMessage.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/Category.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/CategorySecond.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+      <value>com/shopsystem/domain/AdminUser.hbm.xml</value>		<!-- 实体类映射文件的地址 命名就以这种规范吧-->		
+    </list>
+    </property>
+    </bean>
+<!-- 购物车action --> 
+    <bean id="cartAction" class="com.shopsystem.action.CartAction" scope="prototype">
+    	<property name="productService" ref="productService"/>	<!--注入service -->
+  	</bean>
+<!-- 用户订单action -->   
+	<bean id="dinDanAction" class="com.shopsystem.action.DinDanAction" scope="prototype">
+    	<property name="dinDanServiceImpl" ref="dinDanServiceImpl"/>	<!--注入service -->
+  	</bean>
+<!-- 管理员订单action -->
+  	<bean id="adminDinDanAction" class="com.shopsystem.action.AdminDinDanAction" scope="prototype">
+    	<property name="dinDanServiceImpl" ref="dinDanServiceImpl"/>	<!--注入service -->
+  	</bean> 
+<!-- 管理员登陆action-->
+ 	<bean id="adminUserAction" class="com.shopsystem.action.AdminUserAction" scope="prototype">
+    	<property name="adminUserServiceImpl" ref="adminUserServiceImpl"/>	<!--注入service -->
+    </bean>
+    <bean id="adminUserServiceImpl" class="com.shopsystem.serviceImpl.AdminUserServiceImpl">
+  		<property name="adminUserDaoImpl" ref="adminUserDaoImpl"/>
+  	</bean>
+  	<bean id="adminUserDaoImpl" class="com.shopsystem.daoImpl.AdminUserDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>
+<!-- 主页action-->
+	<bean id="indexAction" class="com.shopsystem.action.IndexAction" scope="prototype">
+    	<property name="categoryService" ref="categoryService"/>	<!--注入service -->
+    	<property name="productService" ref="productService"/>	<!--注入service -->
+    </bean>
+
+<!-- 管理员action -->
+	<bean id="adminProductAction" class="com.shopsystem.action.AdminProductAction" scope="prototype">
+    	<property name="productService" ref="productService"/>	<!--注入service -->
+    	<property name="morePicServiceImpl" ref="morePicServiceImpl"/>	<!--注入service -->
+    	<property name="categorySecondServiceImpl" ref="categorySecondServiceImpl"/>	<!--注入service -->
+    </bean>
+    	
+<!-- 管理员一级分类action -->
+	<bean id="adminCategoryAction" class="com.shopsystem.action.AdminCategoryAction" scope="prototype">
+    	<property name="categoryService" ref="categoryService"/>	<!--注入service -->
+    </bean>
+<!-- 管理员二级分类action -->
+	<bean id="adminCategorySecondAction" class="com.shopsystem.action.AdminCategorySecondAction" scope="prototype">
+    	<property name="categoryService" ref="categoryService"/>	<!--注入service -->
+    	<property name="categorySecondServiceImpl" ref="categorySecondServiceImpl"/>	<!--注入service -->
+    </bean>
+<!-- 商品action  -->   
+	<bean id="productAction" class="com.shopsystem.action.ProductAction" scope="prototype">
+    	<property name="productService" ref="productService"/>	<!--注入service -->
+    	<property name="categoryService" ref="categoryService"/>	<!--注入service -->
+    </bean>
+<!-- 订单service -->
+	<bean id="dinDanServiceImpl" class="com.shopsystem.serviceImpl.DinDanServiceImpl">
+  		<property name="dinDanDaoImpl" ref="dinDanDaoImpl"/>
+  	</bean>
+  	<bean id="dinDanDaoImpl" class="com.shopsystem.daoImpl.DinDanDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean> 
+<!-- morepic service -->
+	<bean id="morePicServiceImpl" class="com.shopsystem.serviceImpl.MorePicServiceImpl">
+  		<property name="morePicDaoImpl" ref="morePicDaoImpl"/>
+  	</bean>
+  	<bean id="morePicDaoImpl" class="com.shopsystem.daoImpl.MorePicDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>    
+<!-- 一级分类 -->
+	<bean id="categoryService" class="com.shopsystem.serviceImpl.CategoryServiceImpl">
+  		<property name="categoryDaoImpl" ref="categoryDaoImpl"/>
+  	</bean>
+	<bean id="categoryDaoImpl" class="com.shopsystem.daoImpl.CategoryDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>
+ <!-- 二级分类 -->
+  	<bean id="categorySecondServiceImpl" class="com.shopsystem.serviceImpl.CategorySecondServiceImpl">
+  		<property name="categorySecondDaoImpl" ref="categorySecondDaoImpl"/>
+  	</bean>
+  	<bean id="categorySecondDaoImpl" class="com.shopsystem.daoImpl.CategorySecondDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>
+
+
+<!-- 商品service -->
+	<bean id="productService" class="com.shopsystem.serviceImpl.ProductServiceImpl">
+  		<property name="productDao" ref="productDao"/>
+  	</bean>
+  	<bean id="productDao" class="com.shopsystem.daoImpl.ProductDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>
+  	
+  	
+<!-- 用户  -->   
+	<bean id="userAction" class="com.shopsystem.action.UserAction" scope="prototype">
+    	<property name="userService" ref="userService"/>	<!--注入service -->
+    </bean>
+	<bean id="userService" class="com.shopsystem.serviceImpl.UserServiceImpl">
+  		<property name="userDao" ref="userDao"/>
+  	</bean>
+  	<bean id="userDao" class="com.shopsystem.daoImpl.UserDaoImpl">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>  	
+
+  	
+<!-- 配置hibernate事务管理 --><!-- 确保数据库能够被正确修改，避免数据只修改了一部分而导致数据不完整，或者在修改时受到用户干扰 -->
+  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  
+<!-- 开启Spring注解 事务管理-->
+<!-- 注解提供了一种安全的类似注释的机制   让我们在任意时刻能很方便的调用数据  用来与类、方法等进行关联  -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+ </beans>

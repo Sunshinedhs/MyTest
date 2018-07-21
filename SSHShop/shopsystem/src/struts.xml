@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+ <struts>	
+	<package name="shopsystem" extends="struts-default" namespace="/">
+		<action name="user_*" class="com.shopsystem.action.UserAction" method="{1}">
+			<result name="msg">/user/login.jsp</result>
+			<result name="quit" type="redirectAction">index.action</result>
+			<result name="loginPage" >/user/login.jsp</result>
+			<result name="registPage" >/user/register.jsp</result>
+		</action>
+		<action name="index_*" class="com.shopsystem.action.IndexAction" method="{1}">
+			<result name="index">/index.jsp</result>
+		</action>
+		<action name="adminproduct_*" class="com.shopsystem.action.AdminProductAction" method="{1}">
+			<result name="saveSuccess"  type="redirectAction">adminproduct_findAll.action?page=1</result>
+			<result name="addPageSuccess">/admin/addproduct.jsp</result>
+			<result name="findAll">/admin/ManagePro.jsp</result>
+			<result name="updateSuccess" type="redirectAction">adminproduct_findAll.action?page=1</result>
+		</action>
+		<action name="adminuser_*" class="com.shopsystem.action.AdminUserAction" method="{1}">
+			<result name="loginSuccess" type="redirect">/admin/index.jsp</result>
+			<result name="loginFail">/admin/AdminLogin.jsp</result>
+			<result name="quit" type="redirect">/admin/AdminLogin.jsp</result>
+		</action>
+		<action name="adminCategory_*" class="com.shopsystem.action.AdminCategoryAction" method="{1}">
+			<result name="saveSuccess">/admin/category.jsp</result>
+		</action>
+		<action name="adminCategorysec_*" class="com.shopsystem.action.AdminCategorySecondAction" method="{1}">
+			<result name="addPage">/admin/CategorySecond.jsp</result>
+			<result name="saveSuccess">/admin/CategorySecond.jsp</result>
+		</action>
+		<action name="product_*" class="com.shopsystem.action.ProductAction" method="{1}">
+			<result name="findByPid">/product/ProductMessage.jsp</result>
+			<result name="findByCid">/index.jsp</result>
+			<result name="findByCsid">/index.jsp</result>
+			<result name="vagueSearch">/index.jsp</result>
+		</action>
+		<action name="cart_*" class="com.shopsystem.action.CartAction" method="{1}">			
+			<result name="clearok">/Cart.jsp</result>
+			<result name="myCart">/Cart.jsp</result>
+			<result name="removeCart">/Cart.jsp</result>
+		</action>
+		<action name="dindan_*" class="com.shopsystem.action.DinDanAction" method="{1}">
+			<result name="saveOrder" type="redirectAction">dindan_findByDID.action?did=${currentdid}</result>
+			<result name="msg">/Cart.jsp</result>
+			<result name="findByUid">/orderlist.jsp</result>
+			<result name="findByDID">/order.jsp</result>
+			<result name="updateStateSuccess" type="redirectAction">dindan_findByDID.action?did=${currentdid}</result>
+		</action>
+		<action name="adminDD_*" class="com.shopsystem.action.AdminDinDanAction" method="{1}">
+			<result name="findAll">/admin/UpdateDinDan.jsp</result>
+			<result name="updateStateSuccess" type="redirectAction">adminDD_findAll?page=${page}</result>
+			<result name="findDDMessageSuccess">/Cart.jsp</result>
+		</action>
+	</package>
+</struts>

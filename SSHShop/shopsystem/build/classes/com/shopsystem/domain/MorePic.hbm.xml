@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+   
+    <hibernate-mapping>
+    <class name="com.shopsystem.domain.MorePic" table="morepic" >
+    <id name="mid" column="mid" length="11">
+    <generator class="native"/>
+    </id>
+    <property name="path1" column="path1" length="200"></property>
+    <property name="path2" column="path2" length="200"></property>
+    <property name="path3" column="path3" length="200"></property>
+   	<many-to-one name="product" cascade="save-update"  class="com.shopsystem.domain.Product" column="pid" ></many-to-one>
+    </class>
+    </hibernate-mapping>

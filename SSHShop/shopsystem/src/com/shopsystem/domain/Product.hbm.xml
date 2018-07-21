@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+   
+    <hibernate-mapping>
+    <class name="com.shopsystem.domain.Product" table="product" >
+    <id name="pid" column="pid" >
+    <generator class="native"/>
+    </id>
+    <property name="name" column="name" length="80"></property>
+    <property name="price" column="price" ></property>
+    <property name="quantity" column="quantity" length="11"></property>
+    <property name="pic" column="pic" length="200"></property>
+    <property name="info" column="info" length="45"></property>
+    <property name="pdate"  column="pdate"></property>
+    <property name="hot"  column="hot"></property>
+    <set name="morePics" cascade="save-update,delete" inverse="true">
+    	<key column="pid"/>
+    	<one-to-many class="com.shopsystem.domain.MorePic"/>
+    </set>
+    <many-to-one name="categorySecond" lazy="false" class="com.shopsystem.domain.CategorySecond" column="csid"/>
+    </class>
+    </hibernate-mapping>

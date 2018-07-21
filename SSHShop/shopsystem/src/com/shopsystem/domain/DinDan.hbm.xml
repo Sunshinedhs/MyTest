@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+   
+    <hibernate-mapping>
+    <class name="com.shopsystem.domain.DinDan" table="dindan" >
+    <id name="did" column="did" >
+    <generator class="native"/>
+    </id>
+    	<property name="total"/>
+		<property name="ordertime"/>
+		<property name="state"/>
+		<property name="name"/>
+		<property name="phone"/>
+		<property name="addr"/>
+		
+		
+    <many-to-one name="user" lazy="false" class="com.shopsystem.domain.User" column="uid"></many-to-one>
+    <set name="ddMessages" lazy="false" cascade="save-update" inverse="true">
+    	<key column="did"/>
+    	<one-to-many class="com.shopsystem.domain.DDMessage"/>
+    </set>
+    </class>
+    </hibernate-mapping>
